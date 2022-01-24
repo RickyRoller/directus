@@ -69,7 +69,7 @@ export default async function run(database: Knex, direction: 'up' | 'down' | 'la
 			logger.info(`Applying ${nextVersion.name}...`);
 		}
 
-		await up(database);
+		await up(database, logger);
 		await database.insert({ version: nextVersion.version, name: nextVersion.name }).into('directus_migrations');
 	}
 
@@ -92,7 +92,7 @@ export default async function run(database: Knex, direction: 'up' | 'down' | 'la
 			logger.info(`Undoing ${migration.name}...`);
 		}
 
-		await down(database);
+		await down(database, logger);
 		await database('directus_migrations').delete().where({ version: migration.version });
 	}
 
@@ -105,7 +105,7 @@ export default async function run(database: Knex, direction: 'up' | 'down' | 'la
 					logger.info(`Applying ${migration.name}...`);
 				}
 
-				await up(database);
+				await up(database, logger);
 				await database.insert({ version: migration.version, name: migration.name }).into('directus_migrations');
 			}
 		}
